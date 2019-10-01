@@ -1,0 +1,309 @@
+Total Data Points: Training: 59950  Test: 80271
+Kmeans: Tunning number of clusters
+Kmeans: Fitting
+Kmeans: Fitting...DONE
+Kmeans: Predicting
+Kmeans: Predicting...DONE
+Kmeans: Reducing dimensionality for plotting
+Variability explained by the PC: 0.6398121773650385
+Kmeans: Reducing dimensionality for plotting...DONE
+
+Exporting KMEANS...
+Number of clusters: 4
+0
+
+Cluster 0: 148 data points
+1
+
+Cluster 1: 19676 data points
+2
+
+Cluster 2: 20478 data points
+4
+
+Cluster 4: 39969 data points
+
+DONE.
+-------------------------------------------------------
+Optic: Fitting and predicting
+Variability explained by the PC: 0.5970222188761121
+Optic: Fitting and predicting...DONE
+
+Exporting OPTIC...
+Number of clusters: 86
+-1
+
+Cluster -1: 6890 data points
+0
+
+Cluster 0: 826 data points
+1
+
+Cluster 1: 3085 data points
+2
+
+Cluster 2: 1291 data points
+3
+
+Cluster 3: 149 data points
+4
+
+Cluster 4: 26 data points
+5
+
+Cluster 5: 5322 data points
+6
+
+Cluster 6: 16595 data points
+7
+
+Cluster 7: 142 data points
+8
+
+Cluster 8: 238 data points
+9
+
+Cluster 9: 1786 data points
+10
+
+Cluster 10: 55 data points
+11
+
+Cluster 11: 5731 data points
+12
+
+Cluster 12: 3625 data points
+13
+
+Cluster 13: 166 data points
+14
+
+Cluster 14: 578 data points
+15
+
+Cluster 15: 6578 data points
+16
+
+Cluster 16: 2195 data points
+17
+
+Cluster 17: 118 data points
+18
+
+Cluster 18: 38 data points
+19
+
+Cluster 19: 4556 data points
+20
+
+Cluster 20: 238 data points
+21
+
+Cluster 21: 25 data points
+22
+
+Cluster 22: 291 data points
+23
+
+Cluster 23: 3136 data points
+24
+
+Cluster 24: 40 data points
+25
+
+Cluster 25: 128 data points
+26
+
+Cluster 26: 1707 data points
+27
+
+Cluster 27: 157 data points
+28
+
+Cluster 28: 817 data points
+29
+
+Cluster 29: 42 data points
+30
+
+Cluster 30: 57 data points
+31
+
+Cluster 31: 33 data points
+32
+
+Cluster 32: 7042 data points
+33
+
+Cluster 33: 20642 data points
+34
+
+Cluster 34: 40 data points
+35
+
+Cluster 35: 385 data points
+36
+
+Cluster 36: 83 data points
+37
+
+Cluster 37: 454 data points
+38
+
+Cluster 38: 9113 data points
+39
+
+Cluster 39: 32 data points
+40
+
+Cluster 40: 133 data points
+41
+
+Cluster 41: 33 data points
+42
+
+Cluster 42: 2481 data points
+43
+
+Cluster 43: 9006 data points
+44
+
+Cluster 44: 509 data points
+45
+
+Cluster 45: 2596 data points
+46
+
+Cluster 46: 2335 data points
+47
+
+Cluster 47: 297 data points
+48
+
+Cluster 48: 295 data points
+49
+
+Cluster 49: 221 data points
+50
+
+Cluster 50: 36 data points
+51
+
+Cluster 51: 320 data points
+52
+
+Cluster 52: 1002 data points
+53
+
+Cluster 53: 98 data points
+54
+
+Cluster 54: 12 data points
+55
+
+Cluster 55: 101 data points
+56
+
+Cluster 56: 501 data points
+57
+
+Cluster 57: 1327 data points
+58
+
+Cluster 58: 2952 data points
+59
+
+Cluster 59: 81 data points
+60
+
+Cluster 60: 2311 data points
+61
+
+Cluster 61: 595 data points
+62
+
+Cluster 62: 132 data points
+63
+
+Cluster 63: 108 data points
+64
+
+Cluster 64: 210 data points
+65
+
+Cluster 65: 290 data points
+66
+
+Cluster 66: 584 data points
+67
+
+Cluster 67: 3256 data points
+68
+
+Cluster 68: 67 data points
+69
+
+Cluster 69: 297 data points
+70
+
+Cluster 70: 94 data points
+71
+
+Cluster 71: 36 data points
+72
+
+Cluster 72: 578 data points
+73
+
+Cluster 73: 914 data points
+74
+
+Cluster 74: 218 data points
+75
+
+Cluster 75: 295 data points
+76
+
+Cluster 76: 38 data points
+77
+
+Cluster 77: 361 data points
+78
+
+Cluster 78: 133 data points
+79
+
+Cluster 79: 55 data points
+80
+
+Cluster 80: 85 data points
+81
+
+Cluster 81: 592 data points
+82
+
+Cluster 82: 54 data points
+83
+
+Cluster 83: 61 data points
+84
+
+Cluster 84: 69 data points
+
+DONE.
+-------------------------------------------------------
+IFOREST: Fitting and predicting
+Variability explained by the PC: 0.6398121773650385
+IFOREST: Fitting and predicting...DONE
+
+Exporting IFOREST...
+Number of clusters: 2
+-1
+
+Cluster -1: 55490 data points
+1
+
+Cluster 1: 24781 data points
+
+DONE.
+-------------------------------------------------------

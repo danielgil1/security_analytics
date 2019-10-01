@@ -11,6 +11,10 @@ import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import silhouette_score
+from random import randint
+from random import sample
+import matplotlib.colors as pltc
+
 
 def kmeans_train(X,n_clusters=1):
     """Perform Kmeans clustering
@@ -54,7 +58,7 @@ def kmeans_get_number_clusters(X,max_clusters=7):
         Index of the cluster each sample belongs to.
     """
     scores = []
-    clusters = range(2,max_clusters)
+    clusters = range(2,max_clusters+1)
     for K in clusters:
         
         clusterer = KMeans(n_clusters=K)
@@ -67,7 +71,7 @@ def kmeans_get_number_clusters(X,max_clusters=7):
     return df_silhouette
     
 
-def clustering_print_results(original_df,labels, features, X=None,print_out=True, plot_out=False):
+def clustering_print_results(original_df,labels, features, X=None,print_out=True, plot_out=False,label="clustering"):
     """Prints and plots clustering results.
     
     Parameters
@@ -84,32 +88,40 @@ def clustering_print_results(original_df,labels, features, X=None,print_out=True
     labels : array, shape [n_samples,]
         Index of the cluster each sample belongs to.
     """
+    print("\nExporting "+label.upper()+"...")
     # update original dataframe
     original_df['cluster'] = labels
 
     # group clusters
     clusters = original_df.groupby('cluster')
-
+    clusters_log=pd.DataFrame(columns=original_df.columns)
+    print("Number of clusters:",len(set(labels)))
     if (plot_out):
         # data is expected to be reduced using dimensionality reduction
         original_df['x'] = X[:, 0] 
         original_df['y'] = X[:, 1] 
 
         
-        # Define default colors
-        colors = {-1:'black', 0:'green', 1:'blue', 2:'red', 3:'orange', 4:'purple', 5:'brown', 6:'pink', 7:'lightblue', 8:'grey', 9:'yellow'}
+        # Define colors
+        all_colors = [k for k,v in pltc.cnames.items()]
+        colors = sample(all_colors, len(clusters))
         fig, ax = plt.subplots()
-        for key, cluster in clusters:
-            cluster.plot(ax=ax, kind='scatter', x='x', y='y', alpha=0.5, s=250,label='Cluster: {:d}'.format(key), color=colors[key])
-        fig.savefig("../outputs/clustering/"+str(utils.get_timestamp())+".png")
+        indexColor=0
+        for key,cluster in clusters:
+            cluster.plot(ax=ax, kind='scatter', x='x', y='y', alpha=0.5, s=10,label='Cluster: {:d}'.format(key), color=colors[indexColor])
+            indexColor+=1
+        fig.savefig("../outputs/clustering/"+label+"_"+str(utils.get_timestamp())+".png")
 
     if (print_out):
         for key, cluster in clusters:
+            print(key)
             print('\nCluster {:d}: {:d} data points'.format(key, len(cluster)))
-            print(cluster.head(3))
-
-    print("done.")
-
+            #print(cluster.head(5))
+            clusters_log=pd.concat([clusters_log,cluster.head(5)],sort=False)
+        clusters_log.to_csv("../outputs/clustering/"+label+"_"+str(utils.get_timestamp())+".csv")
+    
+    print("\n"+"DONE.")
+    print("-------------------------------------------------------")
 
 def dbscan_fit_predict(eps,min_samples,X):
     """Perform DBSCAN clustering from features or distance matrix.
