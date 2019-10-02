@@ -19,12 +19,18 @@ import matplotlib.pyplot as plt
 
 # In[2]:
 
+# select type of features and dataset
+selected_features=cconfig.SELECTED_FEATURES_PACKET
+dataset_type=cconfig.DATASET_TYPE_PACKET
+num_clusters=cconfig.DEFAULT_NUM_CLUSTERS
 
 # load original data in dataframes, sample, select some features and scale
-df,df_Normal,df_Attack=preprocessing.data_load(1,None ,False)
-X=preprocessing.data_scale(df[cconfig.SELECTED_FEATURES_FLOW])
-X_Normal=preprocessing.data_scale(df_Normal[cconfig.SELECTED_FEATURES_FLOW])
-X_Attack=preprocessing.data_scale(df_Attack[cconfig.SELECTED_FEATURES_FLOW])
+df,df_Normal,df_Attack=preprocessing.data_load(1,selected_features,False,dataset_type)
+
+
+X=preprocessing.data_scale(df[selected_features])
+X_Normal=preprocessing.data_scale(df_Normal[selected_features])
+X_Attack=preprocessing.data_scale(df_Attack[selected_features])
 
 print("Total Data Points: Training:",len(df_Normal)," Test:",len(df_Attack))
 
@@ -47,7 +53,7 @@ print("Kmeans: Tunning number of clusters")
 
 # fit kmeans model with normal day data
 print("Kmeans: Fitting")
-kmeans=clustering.kmeans_train(X_Normal,5)
+kmeans=clustering.kmeans_train(X_Normal,int(num_clusters))
 print("Kmeans: Fitting...DONE")
 
 # predictions with attack dataset
@@ -61,7 +67,7 @@ XR=preprocessing.get_pc(X_Attack,2)
 print("Kmeans: Reducing dimensionality for plotting...DONE")
 
 # print results
-clustering.clustering_print_results(df_Attack,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,'kmeans')
+clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_kmeans')
 
 
 
@@ -83,7 +89,7 @@ XR=preprocessing.get_pc(X,2)
 print("Optic: Fitting and predicting...DONE")
 
 # print and plot
-clustering.clustering_print_results(df,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,'optic')
+clustering.clustering_print_results(df,labels,selected_features,XR,True,True,dataset_type+'_optic')
 
 
 # # IFOREST
@@ -100,7 +106,7 @@ labels=clustering.iforest_predict(X_Attack,iforest)
 XR=preprocessing.get_pc(X_Attack,2)
 print("IFOREST: Fitting and predicting...DONE")
 # print results
-clustering.clustering_print_results(df_Attack,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,'iforest')
+clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_iforest')
 
 
 # In[ ]:

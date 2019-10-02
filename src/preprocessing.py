@@ -5,7 +5,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.manifold import TSNE
 
 
-def data_load(sample_frac=1,features=None,scale=True):
+def data_load(sample_frac=1,features=None,scale=False,dataset_type=cconfig.DATASET_TYPE_FLOW):
     """Loads data into dataframe and performs sampling if needed
     
     Parameters
@@ -18,12 +18,19 @@ def data_load(sample_frac=1,features=None,scale=True):
     df_train    : Dataframe with training set
     df_test     : Dataframe with test set 
     """
-    if features==None:
-        df_train=pd.read_csv(cconfig.TRAIN_DATA_FLOW).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)
-        df_test=pd.read_csv(cconfig.TEST_DATA_FLOW).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)
+    if (dataset_type==cconfig.DATASET_TYPE_FLOW):
+        training_dataset=cconfig.TRAIN_DATA_FLOW
+        testing_dataset=cconfig.TEST_DATA_FLOW
     else:
-        df_train=pd.read_csv(cconfig.TRAIN_DATA_FLOW).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features]
-        df_test=pd.read_csv(cconfig.TEST_DATA_FLOW).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features]
+        training_dataset=cconfig.TRAIN_DATA_PACKET
+        testing_dataset=cconfig.TEST_DATA_PACKET
+
+    if features==None:
+        df_train=pd.read_csv(training_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0)
+        df_test=pd.read_csv(testing_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0)
+    else:
+        df_train=pd.read_csv(training_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
+        df_test=pd.read_csv(testing_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
     
     df_train['attack']=0
     df_test['attack']=1
