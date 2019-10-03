@@ -32,10 +32,11 @@ def data_load(sample_frac=1,features=None,scale=False,dataset_type=cconfig.DATAS
         df_train=pd.read_csv(training_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
         df_test=pd.read_csv(testing_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
     
-    df_train['attack']=0
-    df_test['attack']=1
+    #df_train['attack']=0
+    #df_test['attack']=1
     df_all=pd.concat([df_train,df_test])
-
+    #df_train=df_train.drop(columns=['attack'])
+    #df_test=df_test.drop(columns=['attack'])
     if scale:
         return data_scale(df_all),data_scale(df_train),data_scale(df_test)
     else:
