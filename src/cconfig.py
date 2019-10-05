@@ -11,8 +11,5 @@ TEST_DATA_PACKET        =   "../inputs/a2_feat_packet_level_attack_3.csv"
 SELECTED_FEATURES_FLOW  =   ['total_duration','total_bytes', 'total_packets', 'src_ports', 'dst_ports', 'pps', 'bps','bpp','num_protocols', 'flag_ack', 'flag_fin', 'flag_psh', 'flag_rst',
        'flag_syn']
 
-SELECTED_FEATURES_PACKET=   ['duration', 'dc_src_ports',
-       'dc_dst_ports', 'total_mb', 'avg_mb', 'mbps', 'total_packets',
-       'num_protocols', 'flag_ack', 'flag_fin', 'flag_psh', 'flag_rst',
-       'flag_syn']
-SELECTED_FEATURES_PACKET=   ["total_bytes","total_common_protocols","total_src_ports","total_dst_ports","total_http_errors","total_failures","duration"]
+
+SELECTED_FEATURES_PACKET=   ['total_duration','total_bytes','total_packets','src_ports','dst_ports','pps','bps','bpp','num_protocols','total_http_errors','total_failures','flag_syn','flag_ack']
