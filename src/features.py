@@ -1,5 +1,6 @@
 import pandas as pd
 import pickle
+import itertools
 
 def generate_basic_features(dataset):
     colFlows=list()
@@ -55,12 +56,18 @@ if __name__ == "__main__":
     df_normal=df_normal.sort_values(by=['tcp_stream','protocol','flow_start'])
     flows_normal=generate_basic_features(df_normal)
 
+    merged_normal = list(itertools.chain.from_iterable(flows_normal))
+    df_merged_normal=pd.DataFrame.from_dict(merged_normal)
+
     with open('flows_normal.pickle', 'wb') as handle:
-        pickle.dump(flows_normal, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(df_merged_normal, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     df_attack=pd.read_csv("../inputs/a2_feat_packet_level_attack_OCT8.csv")
     df_attack=df_attack.sort_values(by=['tcp_stream','protocol','flow_start'])
     flows_attack=generate_basic_features(df_attack)
+
+    merged_attack = list(itertools.chain.from_iterable(flows_attack))
+    df_merged_attack=pd.DataFrame.from_dict(merged_attack)
     with open('flows_attack.pickle', 'wb') as handle:
-            pickle.dump(flows_attack, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle.dump(df_merged_attack, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
