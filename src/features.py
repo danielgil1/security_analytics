@@ -102,7 +102,7 @@ def generate_basic_features(dataset):
                 
 
                 # set timestamps
-                f['flow_start']=conversation.flow_start
+                new_flow['flow_start']=conversation.flow_start
 
                 # set up rate-based features for a new flow
                 new_flow['fwd_bps']=conversation.bps
@@ -116,19 +116,19 @@ def generate_basic_features(dataset):
                 new_flow['protocol']=index[1]
 
                 # set up tcp_flags-based features
-                f['fwd_flag_syn']=conversation.flag_syn
-                f['fwd_flag_ack']=conversation.flag_ack
-                f['fwd_flag_fin']=conversation.flag_fin
-                f['fwd_flag_psh']=conversation.flag_psh
-                f['fwd_flag_rst']=conversation.flag_rst
-                f['first_flag']=conversation.first_flag
+                new_flow['fwd_flag_syn']=conversation.flag_syn
+                new_flow['fwd_flag_ack']=conversation.flag_ack
+                new_flow['fwd_flag_fin']=conversation.flag_fin
+                new_flow['fwd_flag_psh']=conversation.flag_psh
+                new_flow['fwd_flag_rst']=conversation.flag_rst
+                new_flow['first_flag']=conversation.first_flag
                 
                 
                 # statistical features from packets
-                f['fwd_avg_bytes']=conversation.avg_bytes
-                f['fwd_stdev_bytes']=conversation.stdev_bytes
-                f['fwd_min_bytes']=conversation.min_bytes
-                f['fwd_max_bytes']=conversation.max_bytes
+                new_flow['fwd_avg_bytes']=conversation.avg_bytes
+                new_flow['fwd_stdev_bytes']=conversation.stdev_bytes
+                new_flow['fwd_min_bytes']=conversation.min_bytes
+                new_flow['fwd_max_bytes']=conversation.max_bytes
                 
                 flow_list.append(new_flow)
             
