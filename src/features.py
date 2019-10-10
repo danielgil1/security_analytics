@@ -2,6 +2,7 @@ import pandas as pd
 import pickle
 import itertools
 import cconfig
+import utils
 
 def generate_basic_features(dataset):
     colFlows=list()
@@ -211,9 +212,8 @@ def get_count_serv_dst_conn(timebase,dst_ip,src_port,data_flow):
 if __name__ == "__main__":
     pd.set_option("display.precision", 50)
 
-    print("Loading training set.")
+    print(utils.get_time+"Loading training set.")
     df_normal=pd.read_csv("../inputs/training.csv")
-    df_normal=df_normal[:1000]
 
     df_normal=df_normal.sort_values(by=['tcp_stream','protocol','start_time'])
     df_normal[['flow_start']]=df_normal[['flow_start']].apply(pd.to_datetime)
@@ -239,13 +239,13 @@ if __name__ == "__main__":
     df_merged_normal['count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.src_ip,x.dst_port,df_merged_normal),axis=1)
     df_merged_normal['count_count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.dst_ip,x.src_port,df_merged_normal),axis=1)
 
+    
     print("Saving training dataset into dataframe pickle.")
     with open('df_flows_normal.pickle', 'wb') as handle:
         pickle.dump(df_merged_normal, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     print("Loading training set.")
     df_attack=pd.read_csv("../inputs/testing.csv")
-    df_attack=df_attack[:1000]
 
     df_attack=df_attack.sort_values(by=['tcp_stream','protocol','start_time'])
     df_attack[['flow_start']]=df_attack[['flow_start']].apply(pd.to_datetime)
