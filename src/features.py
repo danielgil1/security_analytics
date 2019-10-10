@@ -234,10 +234,10 @@ if __name__ == "__main__":
     df_merged_normal['count_serv_dst']=df_merged_normal.apply(lambda x: time_get_count_serv_dst(x.flow_start,x.dst_ip,x.src_port,df_merged_normal),axis=1)
     
     print("Generating connection features")
-    df_merged_normal['count_dest_conn']=df_merged_normal.apply(lambda x: get_count_dest_conn(x.flow_start,x.src_ip,test),axis=1)
-    df_merged_normal['count_src_conn']=df_merged_normal.apply(lambda x: get_count_src_conn(x.flow_start,x.dst_ip,test),axis=1)
-    df_merged_normal['count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.src_ip,x.dst_port,test),axis=1)
-    df_merged_normal['count_count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.dst_ip,x.src_port,test),axis=1)
+    df_merged_normal['count_dest_conn']=df_merged_normal.apply(lambda x: get_count_dest_conn(x.flow_start,x.src_ip,df_merged_normal),axis=1)
+    df_merged_normal['count_src_conn']=df_merged_normal.apply(lambda x: get_count_src_conn(x.flow_start,x.dst_ip,df_merged_normal),axis=1)
+    df_merged_normal['count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.src_ip,x.dst_port,df_merged_normal),axis=1)
+    df_merged_normal['count_count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.dst_ip,x.src_port,df_merged_normal),axis=1)
 
     print("Saving training dataset into dataframe pickle.")
     with open('df_flows_normal.pickle', 'wb') as handle:
@@ -266,10 +266,10 @@ if __name__ == "__main__":
     df_merged_attack['count_serv_dst']=df_merged_attack.apply(lambda x: time_get_count_serv_dst(x.flow_start,x.dst_ip,x.src_port,df_merged_attack),axis=1)
     
     print("Generating connection features")
-    df_merged_attack['count_dest_conn']=df_merged_attack.apply(lambda x: get_count_dest_conn(x.flow_start,x.src_ip,test),axis=1)
-    df_merged_attack['count_src_conn']=df_merged_attack.apply(lambda x: get_count_src_conn(x.flow_start,x.dst_ip,test),axis=1)
-    df_merged_attack['count_serv_src_conn']=df_merged_attack.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.src_ip,x.dst_port,test),axis=1)
-    df_merged_attack['count_count_serv_src_conn']=df_merged_attack.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.dst_ip,x.src_port,test),axis=1)
+    df_merged_attack['count_dest_conn']=df_merged_attack.apply(lambda x: get_count_dest_conn(x.flow_start,x.src_ip,df_merged_attack),axis=1)
+    df_merged_attack['count_src_conn']=df_merged_attack.apply(lambda x: get_count_src_conn(x.flow_start,x.dst_ip,df_merged_attack),axis=1)
+    df_merged_attack['count_serv_src_conn']=df_merged_attack.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.src_ip,x.dst_port,df_merged_attack),axis=1)
+    df_merged_attack['count_count_serv_src_conn']=df_merged_attack.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.dst_ip,x.src_port,df_merged_attack),axis=1)
 
     print("Saving tesing dataset into dataframe pickle.")
     with open('df_flows_attack.pickle', 'wb') as handle:
