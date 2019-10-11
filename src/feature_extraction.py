@@ -219,10 +219,11 @@ def run(data,filename):
     
     print(utils.get_time()+"- Generating extended features.")
     extended_features=['count_dest','count_src','count_serv_src','count_serv_dst','count_dest_conn','count_src_conn','count_serv_src_conn','count_serv_dst_conn']
-    df_merged[extended_features]=df_merged.apply(lambda x: pd.Series(generate_extended_features(x.flow_start,x.src_ip,x.dst_ip,x.src_port,x.dst_port,df_merged)),axis=1)
-    
+    #df_merged[extended_features]=df_merged.apply(lambda x: pd.Series(generate_extended_features(x.flow_start,x.src_ip,x.dst_ip,x.src_port,x.dst_port,df_merged)),axis=1)
+    generate_extended_features_by_loop(df_merged)
+
     print(utils.get_time()+"- Saving tesing dataset into dataframe pickle.")
-    with open(filename+utils.get_time(), 'wb') as handle:
+    with open(filename+".pickle", 'wb') as handle:
             pickle.dump(df_merged, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":
