@@ -226,43 +226,13 @@ def generate_extended_features(timebase,src_ip,dst_ip,src_port,dst_port,data_flo
     
     return count_dest,count_src,count_serv_src,count_serv_dst,count_dest_conn,count_src_conn,count_serv_src_conn,count_serv_dst_conn
 
+
 if __name__ == "__main__":
     pd.set_option("display.precision", 50)
 
-    print(utils.get_time()+"- Loading training set.")
-    df_normal=pd.read_csv("../inputs/training.csv")
-
-    df_normal=df_normal.sort_values(by=['tcp_stream','protocol','start_time'])
-    df_normal[['flow_start']]=df_normal[['flow_start']].apply(pd.to_datetime)
-    df_normal[['flow_finish']]=df_normal[['flow_finish']].apply(pd.to_datetime)
-    
-    print(utils.get_time()+"- Generating basic features.")
-    flows_normal=generate_basic_features(df_normal)
-    merged_normal = list(itertools.chain.from_iterable(flows_normal))
-    df_merged_normal=pd.DataFrame.from_dict(merged_normal)
-    
-    print(utils.get_time()+"- Generating time features.")
-    df_merged_normal[['flow_start']]=df_merged_normal[['flow_start']].apply(pd.to_datetime)
-    df_merged_normal[['flow_finish']]=df_merged_normal[['flow_finish']].apply(pd.to_datetime)
-    df_merged_normal['flow_duration']=(df_merged_normal.flow_finish-df_merged_normal.flow_start).dt.total_seconds() 
-    df_merged_normal['count_dest']=df_merged_normal.apply(lambda x: time_get_count_dest(x.flow_start,x.src_ip,df_merged_normal),axis=1)
-    df_merged_normal['count_src']=df_merged_normal.apply(lambda x: time_get_count_src(x.flow_start,x.dst_ip,df_merged_normal),axis=1)
-    df_merged_normal['count_serv_src']=df_merged_normal.apply(lambda x: time_get_count_serv_src(x.flow_start,x.src_ip,x.dst_port,df_merged_normal),axis=1)
-    df_merged_normal['count_serv_dst']=df_merged_normal.apply(lambda x: time_get_count_serv_dst(x.flow_start,x.dst_ip,x.src_port,df_merged_normal),axis=1)
-    
-    print(utils.get_time()+"- Generating connection features")
-    df_merged_normal['count_dest_conn']=df_merged_normal.apply(lambda x: get_count_dest_conn(x.flow_start,x.src_ip,df_merged_normal),axis=1)
-    df_merged_normal['count_src_conn']=df_merged_normal.apply(lambda x: get_count_src_conn(x.flow_start,x.dst_ip,df_merged_normal),axis=1)
-    df_merged_normal['count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.src_ip,x.dst_port,df_merged_normal),axis=1)
-    df_merged_normal['count_count_serv_src_conn']=df_merged_normal.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.dst_ip,x.src_port,df_merged_normal),axis=1)
-
-    
-    print(utils.get_time()+"- Saving training dataset into dataframe pickle.")
-    with open('df_flows_normal.pickle', 'wb') as handle:
-        pickle.dump(df_merged_normal, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    print(utils.get_time()+"- Loading training set.")
+    print(utils.get_time()+"- Loading testing set.")
     df_attack=pd.read_csv("../inputs/testing.csv")
+    df_attack=df_attack[:100]
 
     df_attack=df_attack.sort_values(by=['tcp_stream','protocol','start_time'])
     df_attack[['flow_start']]=df_attack[['flow_start']].apply(pd.to_datetime)
@@ -272,23 +242,14 @@ if __name__ == "__main__":
     flows_attack=generate_basic_features(df_attack)
     merged_attack = list(itertools.chain.from_iterable(flows_attack))
     df_merged_attack=pd.DataFrame.from_dict(merged_attack)
-
-    print(utils.get_time()+"- Generating time features.")
-    df_merged_attack[['flow_start']]=df_merged_attack[['flow_start']].apply(pd.to_datetime)
-    df_merged_attack[['flow_finish']]=df_merged_attack[['flow_finish']].apply(pd.to_datetime)
     df_merged_attack['flow_duration']=(df_merged_attack.flow_finish-df_merged_attack.flow_start).dt.total_seconds() 
-    df_merged_attack['count_dest']=df_merged_attack.apply(lambda x: time_get_count_dest(x.flow_start,x.src_ip,df_merged_attack),axis=1)
-    df_merged_attack['count_src']=df_merged_attack.apply(lambda x: time_get_count_src(x.flow_start,x.dst_ip,df_merged_attack),axis=1)
-    df_merged_attack['count_serv_src']=df_merged_attack.apply(lambda x: time_get_count_serv_src(x.flow_start,x.src_ip,x.dst_port,df_merged_attack),axis=1)
-    df_merged_attack['count_serv_dst']=df_merged_attack.apply(lambda x: time_get_count_serv_dst(x.flow_start,x.dst_ip,x.src_port,df_merged_attack),axis=1)
     
-    print(utils.get_time()+"- Generating connection features")
-    df_merged_attack['count_dest_conn']=df_merged_attack.apply(lambda x: get_count_dest_conn(x.flow_start,x.src_ip,df_merged_attack),axis=1)
-    df_merged_attack['count_src_conn']=df_merged_attack.apply(lambda x: get_count_src_conn(x.flow_start,x.dst_ip,df_merged_attack),axis=1)
-    df_merged_attack['count_serv_src_conn']=df_merged_attack.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.src_ip,x.dst_port,df_merged_attack),axis=1)
-    df_merged_attack['count_count_serv_src_conn']=df_merged_attack.apply(lambda x: get_count_serv_src_conn(x.flow_start,x.dst_ip,x.src_port,df_merged_attack),axis=1)
-
+    print(utils.get_time()+"- Generating extended features.")
+    extended_features=['count_dest','count_src','count_serv_src','count_serv_dst','count_dest_conn','count_src_conn','count_serv_src_conn','count_serv_dst_conn'
+]
+    df_merged_attack[extended_features]=df_merged_attack.apply(lambda x: pd.Series(generate_extended_features(x.flow_start,x.src_ip,x.dst_ip,x.src_port,x.dst_port,df_merged_attack)),axis=1)
+    
     print(utils.get_time()+"- Saving tesing dataset into dataframe pickle.")
-    with open('df_flows_attack.pickle', 'wb') as handle:
+    with open('df_flows_attack_2.pickle', 'wb') as handle:
             pickle.dump(df_merged_attack, handle, protocol=pickle.HIGHEST_PROTOCOL)
     
