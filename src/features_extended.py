@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
     print(utils.get_time()+"- Loading testing set.")
     df_attack=pd.read_csv("../inputs/testing.csv")
-    df_attack=df_attack[:100]
+    
 
     df_attack=df_attack.sort_values(by=['tcp_stream','protocol','start_time'])
     df_attack[['flow_start']]=df_attack[['flow_start']].apply(pd.to_datetime)
