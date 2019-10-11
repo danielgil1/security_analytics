@@ -141,20 +141,68 @@ def generate_basic_features(dataset):
 
 
 def generate_extended_features(timebase,src_ip,dst_ip,src_port,dst_port,data_flow):
+    
     delta=pd.Timedelta(cconfig.LAST_N_SECONDS)
     query_time=timebase-delta
+    print(utils.get_time()+"Count_dest")
     count_dest=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.src_ip==src_ip)].dst_ip.unique())
+    print(utils.get_time()+"Count_src")
     count_src=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.dst_ip==dst_ip)].src_ip.unique())
+    print(utils.get_time()+"count_serv_src")
     count_serv_src=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.src_ip==src_ip) & (data_flow.dst_port==dst_port)])
+    print(utils.get_time()+"count_serv_dst")
     count_serv_dst=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.src_ip==dst_ip) & (data_flow.dst_port==src_port)])
     
     n_flows=cconfig.LAST_N_FLOWS
+    print(utils.get_time()+"count_dest_conn")
     count_dest_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.src_ip==src_ip)].tail(n_flows).dst_ip.unique())
+    print(utils.get_time()+"count_src_conn")
     count_src_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.dst_ip==dst_ip)].tail(n_flows).src_ip.unique())
+    print(utils.get_time()+"count_serv_src_conn")
     count_serv_src_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.src_ip==src_ip) & (data_flow.dst_port==dst_port)].tail(n_flows))
+    print(utils.get_time()+"count_serv_src_conn")
     count_serv_dst_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.src_ip==dst_ip) & (data_flow.dst_port==src_port)].tail(n_flows))
-    
+    print("done")
     return count_dest,count_src,count_serv_src,count_serv_dst,count_dest_conn,count_src_conn,count_serv_src_conn,count_serv_dst_conn
+
+def generate_extended_features_by_loop(data_flow):
+    delta=pd.Timedelta(cconfig.LAST_N_SECONDS)
+    
+    n_flows=cconfig.LAST_N_FLOWS
+    size=len(data)
+    i=1
+    features_list=list()
+    for index_flow,row in data_flow.iterrows():
+        print(i,"/",size)
+        timebase=row.flow_start
+        src_ip=row.src_ip
+        dst_ip=row.dst_ip
+        src_port=row.src_port
+        dst_port=row.dst_port
+
+        query_time=timebase-delta
+        count_dest=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.src_ip==src_ip)].dst_ip.unique())
+        count_src=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.dst_ip==dst_ip)].src_ip.unique())
+
+        count_serv_src=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.src_ip==src_ip) & (data_flow.dst_port==dst_port)])
+        
+        count_serv_dst=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.flow_start>query_time) & (data_flow.src_ip==dst_ip) & (data_flow.dst_port==src_port)])
+        
+        
+        
+        count_dest_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.src_ip==src_ip)].tail(n_flows).dst_ip.unique())
+        
+        count_src_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.dst_ip==dst_ip)].tail(n_flows).src_ip.unique())
+        
+        count_serv_src_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.src_ip==src_ip) & (data_flow.dst_port==dst_port)].tail(n_flows))
+        
+        count_serv_dst_conn=len(data_flow[(data_flow.flow_start<timebase) & (data_flow.src_ip==dst_ip) & (data_flow.dst_port==src_port)].tail(n_flows))
+        
+        i+=1
+        features_list.append((count_dest,count_src,count_serv_src,count_serv_dst,count_dest_conn,count_src_conn,count_serv_src_conn,count_serv_dst_conn))
+    
+    with open("list_extended_features.pickle", 'wb') as handle:
+            pickle.dump(features_list, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 def run(data,filename):
     print("**********************************************************")
@@ -170,8 +218,7 @@ def run(data,filename):
     df_merged['flow_duration']=(df_merged.flow_finish-df_merged.flow_start).dt.total_seconds() 
     
     print(utils.get_time()+"- Generating extended features.")
-    extended_features=['count_dest','count_src','count_serv_src','count_serv_dst','count_dest_conn','count_src_conn','count_serv_src_conn','count_serv_dst_conn'
-]
+    extended_features=['count_dest','count_src','count_serv_src','count_serv_dst','count_dest_conn','count_src_conn','count_serv_src_conn','count_serv_dst_conn']
     df_merged[extended_features]=df_merged.apply(lambda x: pd.Series(generate_extended_features(x.flow_start,x.src_ip,x.dst_ip,x.src_port,x.dst_port,df_merged)),axis=1)
     
     print(utils.get_time()+"- Saving tesing dataset into dataframe pickle.")
@@ -181,13 +228,13 @@ def run(data,filename):
 if __name__ == "__main__":
     pd.set_option("display.precision", 50)
 
-    print(utils.get_time()+"- Loading training set.")
-    df_normal=pd.read_csv("../inputs/training.csv")
-    run(df_normal,'normal_train')
+    #print(utils.get_time()+"- Loading training set.")
+    #df_normal=pd.read_csv("../inputs/training.csv")
+    #run(df_normal,'normal_train')
 
     print(utils.get_time()+"- Loading testing set.")
     df_attack=pd.read_csv("../inputs/testing.csv")
-    run(df_attack,'attack_test')
+    run(df_attack[:100],'attack_test')
 
 
 
