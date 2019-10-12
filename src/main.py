@@ -19,7 +19,7 @@ sort_anomalies=cconfig.BIFLOW_ANOMALIES_SORT
 # # Bidirectional flow
 
 # load original data in dataframes, sample, select some features and scale
-df,df_Normal,df_Attack=preprocessing.data_load(0.01,None,False,dataset_type)
+df,df_Normal,df_Attack=preprocessing.data_load(1,None,False,dataset_type)
 X=preprocessing.data_scale(df[selected_features])
 X_Normal=preprocessing.data_scale(df_Normal[selected_features])
 X_Attack=preprocessing.data_scale(df_Attack[selected_features])
@@ -28,10 +28,10 @@ X_Attack=preprocessing.data_scale(df_Attack[selected_features])
 # # KMEANS
 
 # find the best number of clusters
-df_silhouette = clustering.kmeans_get_number_clusters(X_Normal)
+#df_silhouette = clustering.kmeans_get_number_clusters(X_Normal)
 
 # select best number of clusters for kmeans
-max_num_clusters=df_silhouette.iloc[df_silhouette.score.idxmax() ]['Num Clusters']
+max_num_clusters=4 #df_silhouette.iloc[df_silhouette.score.idxmax() ]['Num Clusters']
 
 
 # fit kmeans model with normal day data
@@ -63,13 +63,13 @@ eps=0.5
 min_samples=26
 
 # fit and predict
-dblabels=clustering.dbscan_fit_predict(eps,min_samples,X)
+#dblabels=clustering.dbscan_fit_predict(eps,min_samples,X)
 
 # do dimensionality reduction to plot
-XR=preprocessing.get_pc(X,2)
+#XR=preprocessing.get_pc(X,2)
 
 # print and plot
-clustering.clustering_print_results(df,dblabels,selected_features,XR,True,True,dataset_type+'_dbscan')
+#clustering.clustering_print_results(df,dblabels,selected_features,XR,True,True,dataset_type+'_dbscan')
 
 
 # # OPTIC
