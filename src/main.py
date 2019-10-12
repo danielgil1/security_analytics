@@ -1,36 +1,25 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
-import sys
-sys.path.append("../src")
 import preprocessing
 import cconfig
 import clustering
+import utils
 
 # Plotting defaults
-get_ipython().run_line_magic('matplotlib', 'inline')
 import matplotlib.pyplot as plt
 
 
 # # Load data and preprocess
 
-# In[ ]:
-
-
 # select type of features and default values
-selected_features=cconfig.SELECTED_FEATURES_PACKET
-dataset_type=cconfig.DATASET_TYPE_PACKET
+selected_features=cconfig.SELECTED_FEATURES_BIFLOW
+dataset_type=cconfig.DATASET_TYPE_BIFLOW
 max_num_clusters=cconfig.DEFAULT_NUM_CLUSTERS
+sort_anomalies=cconfig.BIFLOW_ANOMALIES_SORT
 
 
-# In[ ]:
-
+# # Bidirectional flow
 
 # load original data in dataframes, sample, select some features and scale
-df,df_Normal,df_Attack=preprocessing.data_load(0.3,None,False,dataset_type)
+df,df_Normal,df_Attack=preprocessing.data_load(0.01,None,False,dataset_type)
 X=preprocessing.data_scale(df[selected_features])
 X_Normal=preprocessing.data_scale(df_Normal[selected_features])
 X_Attack=preprocessing.data_scale(df_Attack[selected_features])
@@ -38,20 +27,11 @@ X_Attack=preprocessing.data_scale(df_Attack[selected_features])
 
 # # KMEANS
 
-# In[ ]:
-
-
 # find the best number of clusters
 df_silhouette = clustering.kmeans_get_number_clusters(X_Normal)
 
 # select best number of clusters for kmeans
 max_num_clusters=df_silhouette.iloc[df_silhouette.score.idxmax() ]['Num Clusters']
-
-# plot the result for reference
-df_silhouette.plot(x='Num Clusters', y='score')
-
-
-# In[ ]:
 
 
 # fit kmeans model with normal day data
@@ -64,22 +44,19 @@ labels=clustering.kmeans_predict(X_Attack,kmeans)
 XR=preprocessing.get_pc(X_Attack,2)
 
 # print results
-clustering.clustering_print_results(df_Attack,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,dataset_type+'_kmeans')
+clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_kmeans')
 
 
-# In[ ]:
+# In[17]:
 
 
 # print anomalies
 index_anomalies=clustering.kmeans_anomalies(X_Attack,kmeans)
-df_anomalies=df_Attack.iloc[index_anomalies,:]
-df_anomalies
-
+df_anomalies_kmeans=df_Attack.iloc[index_anomalies,:]
+df_anomalies_kmeans.sort_values(by=sort_anomalies,ascending=False)
+utils.save(df_anomalies_kmeans,"df_anomalies_kmeans")
 
 # # DBSCAN
-
-# In[ ]:
-
 
 # define hyper parameters for dbscan
 eps=0.5
@@ -92,12 +69,10 @@ dblabels=clustering.dbscan_fit_predict(eps,min_samples,X)
 XR=preprocessing.get_pc(X,2)
 
 # print and plot
-clustering.clustering_print_results(df,dblabels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,dataset_type+'_dbscan')
+clustering.clustering_print_results(df,dblabels,selected_features,XR,True,True,dataset_type+'_dbscan')
 
 
 # # OPTIC
-
-# In[ ]:
 
 
 # define hyper params for optics
@@ -111,20 +86,14 @@ labels=clustering.optics_fit_predict(X,min_samples,'dbscan', eps)
 XR=preprocessing.get_pc(X,2)
 
 # print and plot
-clustering.clustering_print_results(df,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,dataset_type+'_optic')
+clustering.clustering_print_results(df,labels,selected_features,XR,True,True,dataset_type+'_optic')
 
 
-# In[ ]:
-
-
-df_anomalies=clustering.optics_anomalies(df,labels)
-df_anomalies.sort_values(by=['total_packets','total_mb','duration'],ascending=False)
-
+df_anomalies_optic=clustering.optics_anomalies(df,labels)
+df_anomalies_optic.sort_values(by=sort_anomalies,ascending=False)
+utils.save(df_anomalies_optic,"df_anomalies_optic")
 
 # # IFOREST
-
-# In[ ]:
-
 
 # model iforest
 iforest=clustering.iforest_train(X_Normal)
@@ -134,21 +103,16 @@ labels=clustering.iforest_predict(X_Attack,iforest)
 XR=preprocessing.get_pc(X_Attack,2)
 
 # print results
-clustering.clustering_print_results(df_Attack,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,dataset_type+'_iforest')
-
-
-# In[ ]:
+clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_iforest')
 
 
 # get anomalies
-df_anomalies=clustering.iforest_anomalies(df_Attack,labels)
-df_anomalies.sort_values(by=['total_packets','total_mb','duration'],ascending=False)
+df_anomalies_iforest=clustering.iforest_anomalies(df_Attack,labels)
+df_anomalies_iforest.sort_values(by=sort_anomalies,ascending=False)
+utils.save(df_anomalies_iforest,"df_anomalies_iforest")
 
 
 # # LOF
-
-# In[ ]:
-
 
 outliers_fraction=0.05
 n_neighbors=30
@@ -158,21 +122,14 @@ labels=clustering.lof_fit_predict(X,outliers_fraction,n_neighbors)
 XR=preprocessing.get_pc(X,2)
 
 # print results
-clustering.clustering_print_results(df,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,dataset_type+'_lof')
-
-
-# In[ ]:
-
+clustering.clustering_print_results(df,labels,selected_features,XR,True,True,dataset_type+'_lof')
 
 # get anomalies
-df_anomalies=clustering.lof_anomalies(df,labels)
-df_anomalies.sort_values(by=['total_packets','total_mb','duration'],ascending=False)
-
+df_anomalies_lof=clustering.lof_anomalies(df,labels)
+df_anomalies_lof.sort_values(by=sort_anomalies,ascending=False)
+utils.save(df_anomalies_lof,"df_anomalies_lof")
 
 # # OCSVM
-
-# In[ ]:
-
 
 # train and test the model
 outliers_fraction=0.05
@@ -182,19 +139,10 @@ labels=clustering.ocsvm_fit_predict(X_Normal,X_Attack,outliers_fraction)
 XR=preprocessing.get_pc(X_Attack,3)
 
 # print results
-clustering.clustering_print_results(df_Attack,labels,cconfig.SELECTED_FEATURES_FLOW,XR,True,True,dataset_type+'_ocsvm')
-
-
-# In[ ]:
-
+clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_ocsvm')
 
 # get anomalies
-df_anomalies=clustering.ocsvm_anomalies(df_Attack,labels)
-df_anomalies.sort_values(by=['total_packets','total_mb','duration'],ascending=False)
-
-
-# In[ ]:
-
-
-
+df_anomalies_ocsvm=clustering.ocsvm_anomalies(df_Attack,labels)
+df_anomalies_ocsvm.sort_values(by=sort_anomalies,ascending=False)
+utils.save(df_anomalies_ocsvm,"df_anomalies_ocsvm")
 

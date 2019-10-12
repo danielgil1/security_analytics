@@ -3,9 +3,10 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.manifold import TSNE
+import pickle
 
 
-def data_load(sample_frac=1,features=None,scale=False,dataset_type=cconfig.DATASET_TYPE_FLOW):
+def data_load(sample_frac=1,features=None,scale=False,dataset_type=cconfig.DATASET_TYPE_BIFLOW):
     """Loads data into dataframe and performs sampling if needed
     
     Parameters
@@ -21,22 +22,32 @@ def data_load(sample_frac=1,features=None,scale=False,dataset_type=cconfig.DATAS
     if (dataset_type==cconfig.DATASET_TYPE_FLOW):
         training_dataset=cconfig.TRAIN_DATA_FLOW
         testing_dataset=cconfig.TEST_DATA_FLOW
-    else:
+    elif (dataset_type==cconfig.DATASET_TYPE_PACKET):
         training_dataset=cconfig.TRAIN_DATA_PACKET
         testing_dataset=cconfig.TEST_DATA_PACKET
+    else:
+        training_dataset=cconfig.TRAIN_DATA_BIFLOW
+        testing_dataset=cconfig.TEST_DATA_BIFLOW
 
     if features==None:
-        df_train=pd.read_csv(training_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0)
-        df_test=pd.read_csv(testing_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0)
+        if (dataset_type!=cconfig.DATASET_TYPE_BIFLOW):
+            df_train=pd.read_csv(training_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0)
+            df_test=pd.read_csv(testing_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0)
+        else:
+            df_train=(pickle.load(open(training_dataset, "rb" ))).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0) 
+            df_test=(pickle.load(open(testing_dataset, "rb" ))).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE).fillna(0)
     else:
-        df_train=pd.read_csv(training_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
-        df_test=pd.read_csv(testing_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
+        if (dataset_type!=cconfig.DATASET_TYPE_BIFLOW):
+            df_train=pd.read_csv(training_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
+            df_test=pd.read_csv(testing_dataset).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
+        else:
+            
+            df_train=pickle.load(open(training_dataset, "rb" )).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0) 
+            df_test=pickle.load(open(testing_dataset, "rb" )).sample(frac=sample_frac, replace=False, random_state=cconfig.RANDOM_STATE)[features].fillna(0)
+
     
-    #df_train['attack']=0
-    #df_test['attack']=1
     df_all=pd.concat([df_train,df_test])
-    #df_train=df_train.drop(columns=['attack'])
-    #df_test=df_test.drop(columns=['attack'])
+    
     if scale:
         return data_scale(df_all),data_scale(df_train),data_scale(df_test)
     else:
