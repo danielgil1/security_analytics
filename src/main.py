@@ -26,7 +26,7 @@ X_Attack=preprocessing.data_scale(df_Attack[selected_features])
 
 
 # # KMEANS
-
+print(utils.get_time+" Kmeans")
 # find the best number of clusters
 #df_silhouette = clustering.kmeans_get_number_clusters(X_Normal)
 
@@ -39,15 +39,12 @@ kmeans=clustering.kmeans_train(X_Normal,int(max_num_clusters))
 
 # predictions with attack dataset
 labels=clustering.kmeans_predict(X_Attack,kmeans)
-
+utils.save(labels,"prediction_kmeans")
 # dimensionality reduction
 XR=preprocessing.get_pc(X_Attack,2)
 
 # print results
-clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_kmeans')
-
-
-# In[17]:
+#clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_kmeans')
 
 
 # print anomalies
@@ -74,19 +71,19 @@ min_samples=26
 
 # # OPTIC
 
-
+print(utils.get_time+" OPTIC")
 # define hyper params for optics
 eps=1.5
 min_samples=20
 
 # predict using optics
 labels=clustering.optics_fit_predict(X,min_samples,'dbscan', eps)
-
+utils.save(labels,"prediction_optic")
 # do dimensionality reduction to plot
 XR=preprocessing.get_pc(X,2)
 
 # print and plot
-clustering.clustering_print_results(df,labels,selected_features,XR,True,True,dataset_type+'_optic')
+#clustering.clustering_print_results(df,labels,selected_features,XR,True,True,dataset_type+'_optic')
 
 
 df_anomalies_optic=clustering.optics_anomalies(df,labels)
@@ -94,16 +91,18 @@ df_anomalies_optic.sort_values(by=sort_anomalies,ascending=False)
 utils.save(df_anomalies_optic,"df_anomalies_optic")
 
 # # IFOREST
+print(utils.get_time+" iforest")
 
 # model iforest
 iforest=clustering.iforest_train(X_Normal)
 labels=clustering.iforest_predict(X_Attack,iforest)
+utils.save(labels,"prediction_iforest")
 
 # dimensionality reduction
 XR=preprocessing.get_pc(X_Attack,2)
 
 # print results
-clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_iforest')
+#clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_iforest')
 
 
 # get anomalies
@@ -113,16 +112,17 @@ utils.save(df_anomalies_iforest,"df_anomalies_iforest")
 
 
 # # LOF
+print(utils.get_time+" LOF")
 
 outliers_fraction=0.05
 n_neighbors=30
 labels=clustering.lof_fit_predict(X,outliers_fraction,n_neighbors)
-
+utils.save(labels,"prediction_lof")
 # dimensionality reduction
 XR=preprocessing.get_pc(X,2)
 
 # print results
-clustering.clustering_print_results(df,labels,selected_features,XR,True,True,dataset_type+'_lof')
+#clustering.clustering_print_results(df,labels,selected_features,XR,True,True,dataset_type+'_lof')
 
 # get anomalies
 df_anomalies_lof=clustering.lof_anomalies(df,labels)
@@ -130,16 +130,17 @@ df_anomalies_lof.sort_values(by=sort_anomalies,ascending=False)
 utils.save(df_anomalies_lof,"df_anomalies_lof")
 
 # # OCSVM
+print(utils.get_time+" OCSVM")
 
 # train and test the model
 outliers_fraction=0.05
 labels=clustering.ocsvm_fit_predict(X_Normal,X_Attack,outliers_fraction)
-
+utils.save(labels,"prediction_ocsvm")
 # dimensionality reduction
 XR=preprocessing.get_pc(X_Attack,3)
 
 # print results
-clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_ocsvm')
+#clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_ocsvm')
 
 # get anomalies
 df_anomalies_ocsvm=clustering.ocsvm_anomalies(df_Attack,labels)
