@@ -26,7 +26,7 @@ X_Attack=preprocessing.data_scale(df_Attack[selected_features])
 
 
 # # KMEANS
-print(utils.get_time+" Kmeans")
+print(utils.get_time,"Kmeans")
 # find the best number of clusters
 #df_silhouette = clustering.kmeans_get_number_clusters(X_Normal)
 
@@ -71,7 +71,7 @@ min_samples=26
 
 # # OPTIC
 
-print(utils.get_time+" OPTIC")
+print(utils.get_time,"OPTIC")
 # define hyper params for optics
 eps=1.5
 min_samples=20
@@ -91,7 +91,7 @@ df_anomalies_optic.sort_values(by=sort_anomalies,ascending=False)
 utils.save(df_anomalies_optic,"df_anomalies_optic")
 
 # # IFOREST
-print(utils.get_time+" iforest")
+print(utils.get_time,"iforest")
 
 # model iforest
 iforest=clustering.iforest_train(X_Normal)
@@ -112,7 +112,7 @@ utils.save(df_anomalies_iforest,"df_anomalies_iforest")
 
 
 # # LOF
-print(utils.get_time+" LOF")
+print(utils.get_time,"LOF")
 
 outliers_fraction=0.05
 n_neighbors=30
@@ -130,7 +130,7 @@ df_anomalies_lof.sort_values(by=sort_anomalies,ascending=False)
 utils.save(df_anomalies_lof,"df_anomalies_lof")
 
 # # OCSVM
-print(utils.get_time+" OCSVM")
+print(utils.get_time,"OCSVM")
 
 # train and test the model
 outliers_fraction=0.05
