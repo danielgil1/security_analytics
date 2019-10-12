@@ -6,7 +6,7 @@ import utils
 
 def generate_basic_features(dataset):
     colFlows=list()
-    i=0
+    i=0 
     for index,data in dataset.groupby(['tcp_stream','protocol']):
         i+=1
         

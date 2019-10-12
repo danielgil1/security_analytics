@@ -169,11 +169,12 @@ def generate_extended_features_by_loop(data_flow):
     delta=pd.Timedelta(cconfig.LAST_N_SECONDS)
     
     n_flows=cconfig.LAST_N_FLOWS
-    size=len(data)
+    size=len(data_flow)
     i=1
     features_list=list()
     for index_flow,row in data_flow.iterrows():
-        print(i,"/",size)
+        if (i%10000==0):
+            print(utils.get_time()+" ",i,"/",size)
         timebase=row.flow_start
         src_ip=row.src_ip
         dst_ip=row.dst_ip
@@ -235,7 +236,7 @@ if __name__ == "__main__":
 
     print(utils.get_time()+"- Loading testing set.")
     df_attack=pd.read_csv("../inputs/testing.csv")
-    run(df_attack[:100],'attack_test')
+    run(df_attack,'attack_test')
 
 
 
