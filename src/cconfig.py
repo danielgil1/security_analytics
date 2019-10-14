@@ -15,8 +15,7 @@ TEST_DATA_BIFLOW        =   "../inputs/df_flows_attack.pickle"
 SELECTED_FEATURES_UFLOW =   ['total_duration',
        'total_packets', 'total_bytes', 'pps',
        'bps', 'bpp', 'total_http_errors', 'total_failures', 'flag_ack',
-       'flag_fin', 'flag_psh', 'flag_rst', 'flag_syn', 'first_flag',
-       'last_flag', 'avg_bytes', 'min_bytes', 'max_bytes', 'stdev_bytes']
+       'flag_fin', 'flag_psh', 'flag_rst', 'flag_syn', 'avg_bytes', 'min_bytes', 'max_bytes', 'stdev_bytes']
 SELECTED_FEATURES_BIFLOW=   ['fwd_packets',
        'bwd_packets', 'fwd_bytes', 'bwd_bytes', 'fwd_duration', 
        'fwd_bps', 'fwd_pps', 'fwd_bpp', 'fwd_total_http_errors',
