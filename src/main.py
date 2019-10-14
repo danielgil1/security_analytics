@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 # # Load data and preprocess
 
 # select type of features and default values
-selected_features=cconfig.SELECTED_FEATURES_BIFLOW
 dataset_type=cconfig.DATASET_TYPE_BIFLOW
+selected_features=cconfig.SELECTED_FEATURES_BIFLOW
 max_num_clusters=cconfig.DEFAULT_NUM_CLUSTERS
 sort_anomalies=cconfig.BIFLOW_ANOMALIES_SORT
 
@@ -28,11 +28,13 @@ X_Attack=preprocessing.data_scale(df_Attack[selected_features])
 # # KMEANS
 print(utils.get_time,"Kmeans")
 # find the best number of clusters
-#df_silhouette = clustering.kmeans_get_number_clusters(X_Normal)
+df_silhouette = clustering.kmeans_get_number_clusters(X_Normal)
 
 # select best number of clusters for kmeans
-max_num_clusters=4 #df_silhouette.iloc[df_silhouette.score.idxmax() ]['Num Clusters']
+max_num_clusters=df_silhouette.iloc[df_silhouette.score.idxmax() ]['Num Clusters']
 
+utils.save(df_silhouette,"silhouette")
+print("The number of clusters is: ",max_num_clusters)
 
 # fit kmeans model with normal day data
 kmeans=clustering.kmeans_train(X_Normal,int(max_num_clusters))
@@ -44,20 +46,26 @@ utils.save(labels,"prediction_kmeans")
 XR=preprocessing.get_pc(X_Attack,2)
 
 # print results
-#clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_kmeans')
+clustering.clustering_print_results(df_Attack,labels,selected_features,XR,True,True,dataset_type+'_kmeans')
 
 
-# print anomalies
-index_anomalies=clustering.kmeans_anomalies(X_Attack,kmeans)
-df_anomalies_kmeans=df_Attack.iloc[index_anomalies,:]
-df_anomalies_kmeans.sort_values(by=sort_anomalies,ascending=False)
-utils.save(df_anomalies_kmeans,"df_anomalies_kmeans")
+#distance proximity based to centroids
+index_anomalies=clustering.kmeans_anomalies_proximity(X_Attack,kmeans)
+df_anomalies_kmeans_anomalies_proximity=df_Attack.iloc[index_anomalies,:]
+df_anomalies_kmeans_anomalies_proximity.sort_values(by=sort_anomalies,ascending=False)
+utils.save(df_anomalies_kmeans_anomalies_proximity,"df_anomalies_kmeans_anomalies_proximity")
+
+# extreme value analysis
+df_anomalies_kmeans_z=kmeans_anomalies_extreme_values(df_Attack,X_Attack,kmeans,labels)
+
+# save model
+utils.save(df_anomalies_kmeans_z,"df_anomalies_kmeans_z")
 
 # # DBSCAN
 
 # define hyper parameters for dbscan
-eps=0.5
-min_samples=26
+eps=cconfig.DEFAULT_EPS
+min_samples=cconfig.DEFAULT_MIN_SAMPLES
 
 # fit and predict
 #dblabels=clustering.dbscan_fit_predict(eps,min_samples,X)
@@ -73,8 +81,8 @@ min_samples=26
 
 print(utils.get_time,"OPTIC")
 # define hyper params for optics
-eps=1.5
-min_samples=20
+eps=cconfig.DEFAULT_EPS
+min_samples=cconfig.DEFAULT_MIN_SAMPLES
 
 # predict using optics
 labels=clustering.optics_fit_predict(X,min_samples,'dbscan', eps)

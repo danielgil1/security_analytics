@@ -1,6 +1,3 @@
-RANDOM_STATE            =   42
-DEFAULT_NUM_CLUSTERS    =   5
-
 LAST_N_FLOWS            =   100
 LAST_N_SECONDS          =   "30 seconds"
 
@@ -51,7 +48,24 @@ SELECTED_FEATURES_BIFNF=['bwd_packets', 'fwd_bytes', 'bwd_bytes', 'fwd_duration'
        'count_serv_src', 'count_serv_dst', 'count_dest_conn', 'count_src_conn',
        'count_serv_src_conn', 'count_count_serv_src_conn'] 
 
+# K-Means experimental setup
+RANDOM_STATE            =   42
+DEFAULT_NUM_CLUSTERS    =   5
+
+# DBSCAN and OPTIC experimental setup
+DEFAULT_EPS             =   5
+DEFAULT_MIN_SAMPLES     =   54
+
+# IFOREST
+DEAFULT_CONTAMINATION   =   0.01
+
+# LOF
+N_NEIGHBOURS            =   54
+
+
 SELECTED_FEATURES_PACKET=   ['total_duration','total_bytes','total_packets','src_ports','dst_ports','pps','bps','bpp','num_protocols','total_http_errors','total_failures','flag_syn','flag_ack']
 
 FLOW_ANOMALIES_SORT     =   ['total_bytes','total_packets','total_duration']
 BIFLOW_ANOMALIES_SORT   =   ['fwd_packets','bwd_packets', 'fwd_bytes', 'bwd_bytes', 'fwd_duration']
+
+

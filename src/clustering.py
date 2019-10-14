@@ -8,7 +8,7 @@ from sklearn.cluster import OPTICS, cluster_optics_dbscan
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn import svm
-
+from scipy.stats import zscore
 
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
@@ -73,7 +73,7 @@ def kmeans_get_number_clusters(X,max_clusters=7):
     df_silhouette = pd.DataFrame({'Num Clusters':clusters, 'score':scores})
     return df_silhouette
     
-def kmeans_anomalies(X,model):
+def kmeans_anomalies_proximity(X,model,top=100):
 
     # identify the 5 closest points
     distances = model.transform(X)
@@ -81,8 +81,22 @@ def kmeans_anomalies(X,model):
     # argsort returns an array of indexes which will sort the array
     # in ascending order. Reverse it with [::-1]
     #sorted_idx = np.argsort(distances.ravel())[::-1][:5]
-    sorted_idx = np.argsort(np.amax(distances,axis=1))[::-1][:5]
+    sorted_idx = np.argsort(np.amax(distances,axis=1))[::-1][:top]
     return sorted_idx
+
+
+def kmeans_anomalies_extreme_values(df,X,model,labels):
+    # extreme value analysis
+    distances = model.transform(X)
+
+    df_anomalies_kmeans_zscore=pd.DataFrame(distances,columns=list(set(labels)))
+    df_anomalies_kmeans_zscore=df_anomalies_kmeans_zscore.apply(zscore)
+    df_kmeans_z=df.reset_index(drop=True)
+    df_kmeans_z['zscore_0']=df_anomalies_kmeans_zscore[0]
+    df_kmeans_z['zscore_1']=df_anomalies_kmeans_zscore[1]
+    df_anomalies_kmeans_z=df_kmeans_z[((df_kmeans_z.zscore_0>3) | (df_kmeans_z.zscore_0<-3)) & ((df_kmeans_z.zscore_1>3) | (df_kmeans_z.zscore_1<-3)) ]
+    
+    return df_anomalies_kmeans_z
 
 def clustering_print_results(original_df,labels, features, X=None,print_out=True, plot_out=False,label="clustering"):
     """Prints and plots clustering results.
