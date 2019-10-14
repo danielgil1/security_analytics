@@ -5,13 +5,18 @@ DATASET_TYPE_FLOW       =   "FLOW"
 DATASET_TYPE_PACKET     =   "PACKET"
 DATASET_TYPE_BIFLOW     =   "BIFLOW"
 
-TRAIN_DATA_FLOW         =   "../inputs/A2_feat_flow_level_normal_v2.csv"
-TEST_DATA_FLOW          =   "../inputs/A2_feat_flow_level_test_v2.csv"
+TRAIN_DATA_FLOW         =   "../inputs/training.csv"
+TEST_DATA_FLOW          =   "../inputs/testing.csv"
 TRAIN_DATA_PACKET       =   "../inputs/a2_feat_packet_level_normal_3.csv"
 TEST_DATA_PACKET        =   "../inputs/a2_feat_packet_level_attack_3.csv"
 TRAIN_DATA_BIFLOW       =   "../inputs/df_flows_normal.pickle"
 TEST_DATA_BIFLOW        =   "../inputs/df_flows_attack.pickle"
 
+SELECTED_FEATURES_UFLOW =   ['total_duration',
+       'total_packets', 'total_bytes', 'pps',
+       'bps', 'bpp', 'total_http_errors', 'total_failures', 'flag_ack',
+       'flag_fin', 'flag_psh', 'flag_rst', 'flag_syn', 'first_flag',
+       'last_flag', 'avg_bytes', 'min_bytes', 'max_bytes', 'stdev_bytes']
 SELECTED_FEATURES_BIFLOW=   ['fwd_packets',
        'bwd_packets', 'fwd_bytes', 'bwd_bytes', 'fwd_duration', 
        'fwd_bps', 'fwd_pps', 'fwd_bpp', 'fwd_total_http_errors',
