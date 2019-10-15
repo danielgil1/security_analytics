@@ -31,7 +31,7 @@ def kmeans_fit_predict(X_train,X_test,n_clusters):
         The instance.
     """
     print("Training kmeans with clusters: ",n_clusters)
-    kmeans = KMeans(n_clusters=n_clusters).fit(X_train)
+    kmeans = KMeans(n_clusters=n_clusters,random_state=42,init='random').fit(X_train)
     labels=kmeans.predict(X_test)
     return kmeans,labels
 
@@ -47,7 +47,7 @@ def kmeans_train(X,n_clusters):
         The instance.
     """
     print("Training kmeans with clusters: ",n_clusters)
-    kmeans = KMeans(n_clusters=n_clusters).fit(X)
+    kmeans = KMeans(n_clusters=n_clusters,random_state=42,init='random').fit(X)
     return kmeans
 
 def kmeans_predict(X,model):
@@ -81,7 +81,7 @@ def kmeans_get_number_clusters(X,max_clusters=7):
     clusters = range(2,max_clusters+1)
     for K in clusters:
         
-        clusterer = KMeans(n_clusters=K)
+        clusterer = KMeans(n_clusters=K,random_state=42,init='random')
         cluster_labels = clusterer.fit_predict(X)
         score = silhouette_score(X, cluster_labels)
         scores.append(score)
@@ -158,7 +158,7 @@ def clustering_print_results(original_df,labels, features, X=None,print_out=True
     if (print_out):
         for key, cluster in clusters:
             print('\nCluster {:d}: {:d} data points'.format(key, len(cluster)))
-            clusters_log=pd.concat([clusters_log,cluster.head(5)],sort=False)
+            clusters_log=pd.concat([clusters_log,cluster.head(100)],sort=False)
         clusters_log.to_csv("../outputs/clustering/"+label+"_"+str(utils.get_timestamp())+".csv")
     
     print("\n"+"DONE.")
