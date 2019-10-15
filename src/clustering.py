@@ -19,6 +19,22 @@ from random import sample
 import matplotlib.colors as pltc
 from mpl_toolkits.mplot3d import Axes3D
 
+def kmeans_fit_predict(X_train,X_test,n_clusters):
+    """Perform Kmeans clustering
+    Parameters
+    ----------
+    X : array, shape (n_samples, n_features), or (n_samples, n_samples) 
+
+    Returns
+    -------
+    self : instance of kmeans model
+        The instance.
+    """
+    print("Training kmeans with clusters: ",n_clusters)
+    kmeans = KMeans(n_clusters=n_clusters).fit(X_train)
+    labels=kmeans.predict(X_test)
+    return kmeans,labels
+
 def kmeans_train(X,n_clusters):
     """Perform Kmeans clustering
     Parameters
@@ -30,7 +46,7 @@ def kmeans_train(X,n_clusters):
     self : instance of kmeans model
         The instance.
     """
-    print("Kmeans - n_clusters: ",n_clusters)
+    print("Training kmeans with clusters: ",n_clusters)
     kmeans = KMeans(n_clusters=n_clusters).fit(X)
     return kmeans
 
