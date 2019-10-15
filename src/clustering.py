@@ -19,7 +19,7 @@ from random import sample
 import matplotlib.colors as pltc
 from mpl_toolkits.mplot3d import Axes3D
 
-def kmeans_train(X,n_clusters=1):
+def kmeans_train(X,n_clusters):
     """Perform Kmeans clustering
     Parameters
     ----------
@@ -30,6 +30,7 @@ def kmeans_train(X,n_clusters=1):
     self : instance of kmeans model
         The instance.
     """
+    print("Kmeans - n_clusters: ",n_clusters)
     kmeans = KMeans(n_clusters=n_clusters).fit(X)
     return kmeans
 
