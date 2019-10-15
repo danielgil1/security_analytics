@@ -36,3 +36,8 @@ Password: 6260
 
 Go to the notebook folder and find the notebooks mentioned above you need to run it.
 
+# Attack results
+
+| Type | Start        | Finish       | Attackers                                                    | Victim        | Details                                                      |
+| ---- | ------------ | ------------ | ------------------------------------------------------------ | ------------- | ------------------------------------------------------------ |
+| DDoS | 17:14:05.497 | 19:16:12.201 | 162.242.240.67<br/>169.54.33.166<br/>146.20.128.223<br/>146.20.128.189<br/>151.101.192.194<br/>13.59.43.55<br/>104.16.26.35<br/>13.58.146.190<br/>104.117.102.33<br/>107.22.224.100<br/>104.97.137.26 | 192.168.10.50 | Stream ID, src_port and dst_port is detailed in the repository ddos.csv as several values are involved. |
