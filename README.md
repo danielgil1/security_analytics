@@ -1,12 +1,12 @@
 # Security Analytics
 
 
-## Machine learning based cyberattack detection  
+## Machine learning based cyberattack detection  
 
 
 Note: To quickly see results go to notebook Summary.ipynb. 
 
-## Structure of code
+## Structure of code
 The code is structured as follows:  
 <img src="./tree.png">
 
@@ -34,7 +34,7 @@ Quickstart:
 
 Go to the notebook folder and find the notebooks mentioned above you need to run it.
 
-# Attack results
+# Attack results
 
 | Type | Start        | Finish       | Attackers                                                    | Victim        | Details                                                      |
 | ---- | ------------ | ------------ | ------------------------------------------------------------ | ------------- | ------------------------------------------------------------ |
