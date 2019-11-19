@@ -1,9 +1,7 @@
-# COMP90073-Security Analytics Assignment 2
+# Security Analytics
 
 
 ## Machine learning based cyberattack detection  
-
-## Daniel Gil <Student Id: 905923>  
 
 
 Note: To quickly see results go to notebook Summary.ipynb. 
@@ -28,18 +26,11 @@ If code needs to be run, there are two options:
 
 ## Run the clustering analysis and outliers results from the web.
 
-Source code repository can be found here: 
-https://github.com/danielgil1/COMP90073-2  
-
 
 Quickstart: 
-1. Outliers per each of the clustering technique: https://github.com/danielgil1/COMP90073-2/blob/master/notebooks/outliers.ipynb
-2. Summary DDoS Attack: Go to the repo https://github.com/danielgil1/COMP90073-2/blob/master/notebooks/Summary.ipynb
+1. Outliers per each of the clustering technique: https://github.com/danielgil1/security_analytics/blob/master/notebooks/outliers.ipynb
+2. Summary DDoS Attack: Go to the repo https://github.com/danielgil1/security_analytics/blob/master/notebooks/Summary.ipynb
  
-
-Go to the URL:  http://115.146.92.184:8888/lab 
-
-Password: 6260
 
 Go to the notebook folder and find the notebooks mentioned above you need to run it.
 
